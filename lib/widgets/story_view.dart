@@ -790,6 +790,7 @@ class StoryProgressIndicator extends StatelessWidget {
   final double value;
   final double indicatorHeight;
   final Color indicatorColor;
+  final Color indicatorBgColor;
 
   StoryProgressIndicator(
     this.value, {
