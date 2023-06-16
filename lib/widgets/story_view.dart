@@ -405,6 +405,7 @@ class StoryView extends StatefulWidget {
 
   // Indicator Color
   final Color indicatorColor;
+  final Color indicatorBgColor;
 
   StoryView({
     required this.storyItems,
@@ -416,6 +417,7 @@ class StoryView extends StatefulWidget {
     this.inline = false,
     this.onVerticalSwipeComplete,
     this.indicatorColor = Colors.white,
+    this.indicatorBgColor = Colors.white30,
   });
 
   @override
@@ -634,6 +636,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                     key: UniqueKey(),
                     indicatorHeight: widget.inline ? IndicatorHeight.small : IndicatorHeight.large,
                     indicatorColor: widget.indicatorColor,
+                    indicatorBgColor: widget.indicatorBgColor,
                   ),
                 ),
               ),
@@ -728,7 +731,7 @@ class PageBar extends StatefulWidget {
     this.animation, {
     this.indicatorHeight = IndicatorHeight.large,
     this.indicatorColor = Colors.white,
-    this.indicatorBgColor = Colors.white.withOpacity(0.4),
+    this.indicatorBgColor = Colors.white30,
     Key? key,
   }) : super(key: key);
 
