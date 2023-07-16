@@ -434,7 +434,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
   StreamSubscription<PlaybackState>? _playbackSubscription;
 
   VerticalDragInfo? verticalDragInfo;
-
+  late PageController pgvController;
   StoryItem? get _currentStory {
     return widget.storyItems.firstWhereOrNull((it) => !it!.shown);
   }
@@ -448,6 +448,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    pgvController = PageController();
 
     // All pages after the first unshown page should have their shown value as
     // false
@@ -524,6 +525,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       if (status == AnimationStatus.completed) {
         storyItem.shown = true;
         if (widget.storyItems.last != storyItem) {
+          animNextPage();
           _beginPlay();
         } else {
           // done playing
@@ -539,6 +541,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
 
   void _beginPlay() {
     setState(() {});
+
     _play();
   }
 
@@ -611,13 +614,48 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     _nextDebouncer = Timer(Duration(milliseconds: 500), () {});
   }
 
+  Future<void> animNextPage() async {
+    setState(() {
+      isAnimToPageProg = true;
+    });
+    await pgvController.nextPage(duration: Duration(milliseconds: 150), curve: Curves.easeIn);
+    setState(() {
+      isAnimToPageProg = false;
+    });
+  }
+
+  bool isAnimToPageProg = false;
+
+  int lastPageViewIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
       child: Stack(
         children: <Widget>[
-          _currentView,
+          //PageView.builder(
+          //  controller: pgvController,
+          //  itemCount: widget.storyItems.length,
+          //  itemBuilder: (context, index) {
+          //    return widget.storyItems[index]!.view;
+          //  },
+          PageView(
+            controller: pgvController,
+            children: widget.storyItems.map((e) => e!.view).toList(),
+            onPageChanged: (value) {
+              if (pgvController.page! < lastPageViewIndex && !isAnimToPageProg) {
+                _goBack();
+              } else if (pgvController.page! > lastPageViewIndex && !isAnimToPageProg) {
+                _goForward();
+              }
+
+              lastPageViewIndex = value;
+            },
+
+            scrollDirection: Axis.horizontal,
+            //physics: NeverScrollableScrollPhysics(),
+          ),
+
           Visibility(
             visible: widget.progressPosition != ProgressPosition.none,
             child: Align(
@@ -657,7 +695,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                   if (_nextDebouncer?.isActive == false) {
                     widget.controller.play();
                   } else {
-                    widget.controller.next();
+                    //widget.controller.next();
                   }
                 },
                 onVerticalDragStart: widget.onVerticalSwipeComplete == null
@@ -693,15 +731,15 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                         verticalDragInfo = null;
                       },
               )),
-          Align(
-            alignment: Alignment.centerLeft,
-            heightFactor: 1,
-            child: SizedBox(
-                child: GestureDetector(onTap: () {
-                  widget.controller.previous();
-                }),
-                width: 70),
-          ),
+          //Align(
+          //  alignment: Alignment.centerLeft,
+          //  heightFactor: 1,
+          //  child: SizedBox(
+          //      child: GestureDetector(onTap: () {
+          //        widget.controller.previous();
+          //      }),
+          //      width: 70),
+          //),
         ],
       ),
     );
