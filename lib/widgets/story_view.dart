@@ -110,7 +110,7 @@ class StoryItem {
     required StoryController controller,
     Key? key,
     BoxFit imageFit = BoxFit.fitWidth,
-    String? caption,
+    Text? caption,
     bool shown = false,
     Map<String, dynamic>? requestHeaders,
     Duration? duration,
@@ -129,27 +129,15 @@ class StoryItem {
             ),
             SafeArea(
               child: Align(
-                alignment: Alignment.bottomCenter,
+                alignment: Alignment.topLeft,
                 child: Container(
-                  width: double.infinity,
-                  margin: EdgeInsets.only(
-                    bottom: 24,
-                  ),
+                  margin: EdgeInsets.only(top: 16),
                   padding: EdgeInsets.symmetric(
-                    horizontal: 24,
+                    horizontal: 18,
                     vertical: 8,
                   ),
-                  color: caption != null ? Colors.black54 : Colors.transparent,
-                  child: caption != null
-                      ? Text(
-                          caption,
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.white,
-                          ),
-                          textAlign: TextAlign.center,
-                        )
-                      : SizedBox(),
+                  color: Colors.transparent,
+                  child: caption != null ? caption : SizedBox(),
                 ),
               ),
             )
@@ -223,7 +211,7 @@ class StoryItem {
     Key? key,
     Duration? duration,
     BoxFit imageFit = BoxFit.fitWidth,
-    String? caption,
+    Text? caption,
     bool shown = false,
     Map<String, dynamic>? requestHeaders,
   }) {
@@ -240,19 +228,15 @@ class StoryItem {
               ),
               SafeArea(
                 child: Align(
-                  alignment: Alignment.bottomCenter,
+                  alignment: Alignment.topLeft,
                   child: Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.only(bottom: 24),
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                    color: caption != null ? Colors.black54 : Colors.transparent,
-                    child: caption != null
-                        ? Text(
-                            caption,
-                            style: TextStyle(fontSize: 15, color: Colors.white),
-                            textAlign: TextAlign.center,
-                          )
-                        : SizedBox(),
+                    margin: EdgeInsets.only(top: 16),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 18,
+                      vertical: 8,
+                    ),
+                    color: Colors.transparent,
+                    child: caption != null ? caption : SizedBox(),
                   ),
                 ),
               )
