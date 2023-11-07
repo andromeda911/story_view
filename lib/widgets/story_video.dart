@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:video_player/video_player.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 import '../utils.dart';
 import '../controller/story_controller.dart';
@@ -131,12 +132,21 @@ class StoryVideoState extends State<StoryVideo> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.black,
-      height: double.infinity,
-      width: double.infinity,
-      child: getContentView(),
-    );
+    return VisibilityDetector(
+        onVisibilityChanged: (visibilityInfo) {
+          if (visibilityInfo.visibleFraction < 0.5) {
+            playerController?.pause();
+          } else if (visibilityInfo.visibleFraction == 1) {
+            playerController?.play();
+          }
+        },
+        key: Key('story$hashCode'),
+        child: Container(
+          color: Colors.black,
+          height: double.infinity,
+          width: double.infinity,
+          child: getContentView(),
+        ));
   }
 
   @override
